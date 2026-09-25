@@ -1,0 +1,37 @@
+{
+  "name": "zoa-gateway-vercel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Vercel Gateway – đầu mối 2 chiều duy nhất giao tiếp Zalo OA/ZNS/ZBS API cho ZOA.vote và các nghiệp vụ Zalo tương lai",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "vercel-build": "prisma generate && prisma db push --accept-data-loss && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "create-client": "tsx scripts/create-gateway-client.ts",
+    "generate-pkce-pair": "tsx scripts/generate-pkce-pair.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "next": "14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
+    "prisma": "^5.20.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.5.3",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.1.9"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
