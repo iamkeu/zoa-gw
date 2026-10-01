@@ -1,0 +1,1 @@
+{"routes":[{"path":"/","title":"OAvote dashboard"},{"path":"/login","title":"Đăng nhập"},{"path":"/send","title":"Gửi file + Vote"},{"path":"/transactions","title":"Nhật ký giao dịch"},{"path":"/templates","title":"Template Vote"},{"path":"/settings","title":"Cấu hình"}]}

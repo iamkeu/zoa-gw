@@ -1,0 +1,6 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
+import { requireUser, authError } from '@/lib/authz';
+import { createSupabaseAdminClient } from '@/lib/supabase/server';
+const allowed = new Set(['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','text/csv']);
+export async function POST(req: NextRequest){ try { const { user } = await requireUser(['admin','operator']); const body=await req.json(); const size=Number(body.sizeBytes); if(!body.fileName||!allowed.has(body.contentType)||!Number.isFinite(size)||size<=0||size>Number(process.env.MAX_FILE_SIZE_BYTES||5242880)) return NextResponse.json({error:{code:'INVALID_FILE',message:'File không hợp lệ hoặc vượt quá 5 MB'}},{status:400}); const transactionId=randomUUID(); const safe=String(body.fileName).replace(/[^a-zA-Z0-9._-]/g,'_'); const path=`${user.id}/${transactionId}/${randomUUID()}-${safe}`; const admin=createSupabaseAdminClient(); const { data, error }=await admin.storage.from(process.env.SUPABASE_STORAGE_BUCKET||'oavote-files').createSignedUploadUrl(path); if(error) throw error; return NextResponse.json({data:{transactionId,objectPath:path,uploadUrl:data.signedUrl,token:data.token,expiresAt:new Date(Date.now()+3600000).toISOString()}}); } catch(e){ return authError(e); } }
