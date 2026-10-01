@@ -1,10 +1,10 @@
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseAdminClient, createSupabaseServerClient } from '@/lib/supabase/server';
 export type AppRole = 'admin' | 'operator' | 'viewer';
 export async function requireUser(roles?: AppRole[]) {
   const supabase = createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('UNAUTHENTICATED');
-  const { data: profile } = await supabase.from('user_profiles').select('id,email,display_name,role,status').eq('id', user.id).single();
+  const { data: profile } = await createSupabaseAdminClient().from('user_profiles').select('id,email,display_name,role,status').eq('id', user.id).single();
   if (!profile || profile.status !== 'active') throw new Error('FORBIDDEN');
   if (roles && !roles.includes(profile.role) && profile.role !== 'admin') throw new Error('FORBIDDEN');
   return { user, profile, supabase };
