@@ -1,0 +1,4 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { requireUser, authError } from '@/lib/authz';
+import { createSupabaseAdminClient } from '@/lib/supabase/server';
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) { try { const { profile } = await requireUser(['admin']); const body = await req.json(); const isActive = Boolean(body.is_active); const db = createSupabaseAdminClient(); const { data, error } = await db.from('rating_templates').update({ is_active: isActive, updated_by: profile.id, updated_at: new Date().toISOString() }).eq('id', params.id).select('id,template_id,name,parameters,is_active').single(); if (error) throw error; await db.from('audit_logs').insert({ actor_id: profile.id, action: 'template.visibility.updated', entity_type: 'rating_templates', entity_id: params.id, metadata: { is_active: isActive } }); return NextResponse.json({ data }); } catch (e) { return authError(e); } }
