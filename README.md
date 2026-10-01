@@ -19,6 +19,8 @@ Google provider được bật trong Supabase Auth dashboard; không commit `.en
 ## Deployment
 
 - GitHub: `iamkeu/zoa-gw`, branch `main`.
-- Vercel: project `zoa-vote-gateway`.
+- Vercel: project `zoa-gw`, production domain `https://zoa-gw.vercel.app`.
 - Supabase: project `oavote`.
+- Supabase Auth redirect URL: `https://zoa-gw.vercel.app/auth/callback`.
+- Zalo OAuth callback URL: `https://zoa-gw.vercel.app/api/zalo/oauth/callback`.
 - Cần cấu hình Google OAuth redirect URL và Zalo secrets trước khi bật production send.
