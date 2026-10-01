@@ -13,5 +13,6 @@ export function authError(error: unknown) {
   const message = error instanceof Error ? error.message : 'INTERNAL_ERROR';
   if (message === 'UNAUTHENTICATED') return Response.json({ error: { code: 'UNAUTHENTICATED', message: 'Đăng nhập để tiếp tục' } }, { status: 401 });
   if (message === 'FORBIDDEN') return Response.json({ error: { code: 'FORBIDDEN', message: 'Bạn không có quyền thực hiện thao tác này' } }, { status: 403 });
+  if (message.startsWith('ZALO_')) return Response.json({ error: { code: 'ZALO_API_ERROR', message } }, { status: 502 });
   return Response.json({ error: { code: 'INTERNAL_ERROR', message: 'Có lỗi hệ thống' } }, { status: 500 });
 }
